@@ -9,12 +9,13 @@ import {
 } from "react-leaflet";
 import "./css/App.css";
 import useGeoLocation from "./hooks/useGeoLocation";
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 
-import Button from "@mui/material/Button";
-
 const App = ({ zoom = 13, scrollWheelZoom = true }) => {
+
+  // modal states and functions
+
+  // geolocation 
   const location = useGeoLocation();
   const ZOOM_LEVEL = 9;
 
@@ -29,6 +30,8 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
       click(e) {
         let newCords = [e.latlng.lat, e.latlng.lng];
         
+        
+
         setCords((prevValue) => {
           return [...prevValue, newCords];
         });

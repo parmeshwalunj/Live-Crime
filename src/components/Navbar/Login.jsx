@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from '@mui/material/Button';
-import { signInWithGoogle } from '../../firebase/authApi'
+import { signInWithGoogle, signOut } from '../../firebase/authApi'
+import { getAuth } from 'firebase/auth'
 
 function Login() {
 
-    const success = (user) => {
-        console.log(user)
+    const [toggle, setToggle] = useState("Login")
+
+    const login = () => {
+        setToggle("logout")
     }
 
-    const failure = (code, error) => {
-        console.log(error)
+    const logout = () => {
+        setToggle("login")
+    }
+
+    const checkLogin = () => {
+        let auth = getAuth();
+        if (auth.currentUser == null) {
+            signInWithGoogle(login);
+        } else {
+            signOut(logout);
+        }
     }
 
     return (
-        <Button color="inherit" onClick={() => signInWithGoogle(success, failure)}>Login</Button>
+        <Button color="inherit" onClick={checkLogin}>{toggle}</Button>
     );
 }
 
