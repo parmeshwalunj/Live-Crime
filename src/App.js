@@ -1,3 +1,4 @@
+import React, { useState, useRef } from "react";
 import NavBar from "./components/Navbar/Navbar";
 import {
   MapContainer,
@@ -21,7 +22,27 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
     // TODO: use GeoIp API to get approximate location
   }
 
-  console.log(location);
+  const [cords, setCords] = useState([]);
+
+  const LocationMarker = () => {
+    const map = useMapEvents({
+      click(e) {
+        let newCords = [e.latlng.lat, e.latlng.lng];
+        
+        setCords((prevValue) => {
+          return [...prevValue, newCords];
+        });
+      },
+    });
+
+    return (
+      <>
+        {cords.map((cord) => {
+          return <Marker position={cord} />;
+        })}
+      </>
+    );
+  };
 
   return (
     <>
@@ -46,13 +67,13 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
             {location.loaded && !location.error && (
               <Marker
                 position={[location.coordinates.lat, location.coordinates.lng]}
+                Color="Red"
               ></Marker>
             )}
-            {/* <LocationMarker /> */}
+            <LocationMarker />
           </MapContainer>
         ) : (
           <div>Location Access not given, use GeoIP location here.</div>
@@ -74,13 +95,5 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
     </>
   );
 };
-
-// function App() {
-//   return (
-//    <>
-//      <NavBar />
-//    </>
-//   );
-// }
 
 export default App;

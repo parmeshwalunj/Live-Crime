@@ -8,7 +8,7 @@ import {
 export const signInWithGoogle = (onSuccess, onError) => {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
-  auth().useDeviceLanguage();
+  // auth().useDeviceLanguage();
   signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
