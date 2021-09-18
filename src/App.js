@@ -38,7 +38,11 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
     return (
       <>
         {cords.map((cord) => {
-          return <Marker position={cord} />;
+          return <Marker position={cord} >
+            <Popup>
+               crime happned.
+          </Popup>
+          </Marker>;
         })}
       </>
     );
@@ -70,8 +74,12 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
             {location.loaded && !location.error && (
               <Marker
                 position={[location.coordinates.lat, location.coordinates.lng]}
-                Color="Red"
-              ></Marker>
+                
+              >
+                <Popup>
+               your location.
+                </Popup>
+              </Marker>
             )}
             <LocationMarker />
           </MapContainer>
