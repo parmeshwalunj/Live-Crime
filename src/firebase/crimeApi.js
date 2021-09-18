@@ -1,14 +1,4 @@
-import {
-  getDatabase,
-  ref,
-  push,
-  query,
-  orderByChild,
-  limitToFirst,
-  onValue,
-  startAt,
-  endAt,
-} from "firebase/database";
+import { getDatabase, ref, push, query, onValue } from "firebase/database";
 import { firebaseApp } from "./init";
 import { distanceBetween } from "../utils";
 
