@@ -1,5 +1,6 @@
-import { getDatabase, ref, push } from "firebase/database";
+import { getDatabase, ref, push, query, onValue } from "firebase/database";
 import { firebaseApp } from "./init";
+import { distanceBetween } from "../utils";
 
 /**
  * @typedef {"robbing" | "murder" | "traffic" | "kidnapping" | "fire"} CrimeType
@@ -38,4 +39,33 @@ const addCrime = (user, data, onSuccess, onError) => {
     .catch(onError);
 };
 
-export { addCrime };
+const getNearbyCrimesListener = (location, onSuccess, onError) => {
+  const db = getDatabase(firebaseApp);
+  onValue(
+    query(ref(db, "crimes/")),
+    (snap) => {
+      if (snap.val()) {
+        const crimes = snap.val();
+        const crimeData = [];
+        for (const crime of crimes) {
+          const distance = distanceBetween(
+            location.lat,
+            location.lng,
+            crime.lat,
+            crime.lng
+          );
+          // 100km.
+          if (distance < 100) {
+            crimeData.push(crime);
+          }
+        }
+        onSuccess(crimeData);
+      } else {
+        onSuccess([]);
+      }
+    },
+    onError
+  );
+};
+
+export { addCrime, getNearbyCrimesListener };
