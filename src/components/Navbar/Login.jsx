@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 import { signInWithGoogle, signOut } from '../../firebase/authApi'
 import { getAuth } from 'firebase/auth'
@@ -14,6 +14,15 @@ function Login() {
     const logout = () => {
         setToggle("login")
     }
+
+    const failureCallBack = (err) => {
+        console.log(err)
+    }
+
+    useEffect(() => {
+        console.log("hello")
+        signInWithGoogle(login,failureCallBack)
+    }, []);
 
     const checkLogin = () => {
         let auth = getAuth();
