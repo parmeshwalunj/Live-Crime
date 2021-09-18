@@ -4,10 +4,11 @@ import {
   getAuth,
   signOut as firebaseSignOut,
 } from "firebase/auth";
+import { firebaseApp } from "./init";
 
 export const signInWithGoogle = (onSuccess, onError) => {
   const provider = new GoogleAuthProvider();
-  const auth = getAuth();
+  const auth = getAuth(firebaseApp);
   // auth().useDeviceLanguage();
   signInWithPopup(auth, provider)
     .then((result) => {
