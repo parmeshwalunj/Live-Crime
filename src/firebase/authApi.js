@@ -4,6 +4,7 @@ import {
   getAuth,
   signOut as firebaseSignOut,
 } from "firebase/auth";
+
 import { firebaseApp } from "./init";
 
 export const signInWithGoogle = (onSuccess, onError) => {
