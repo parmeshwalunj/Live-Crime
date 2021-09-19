@@ -46,12 +46,12 @@ function DisplayCrime({ show, handleClose, crimeData, messages }) {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose} style={{}}>
+      <Modal show={show} onHide={handleClose} style={{ height: "90vh" }}>
         <Modal.Header>
           <Modal.Title style={style.title}>{crimeData.type}</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body style={{ overflow: "auto", maxHeight: "50vh" }}>
+        <Modal.Body style={{ overflow: "auto" }}>
           <div>
             <NearbyCrime
               landmarks={crimeData.landmarks}
@@ -62,7 +62,7 @@ function DisplayCrime({ show, handleClose, crimeData, messages }) {
             />
           </div>
           <div>
-            <ListGroup>
+            <ListGroup style={{ maxHeight: 200, overflowY: "scroll" }}>
               {chats.map((chat, id) => (
                 <ListGroup.Item key={id}>
                   <div style={{ display: "flex", alignItems: "center" }}>
