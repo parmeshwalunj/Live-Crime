@@ -66,8 +66,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
         let curCords = [e.latlng.lat, e.latlng.lng];
         setNewCords(curCords);
         let auth = getAuth();
-        if (!loggedIn) 
-        return alert("Please Login First");
+        if (auth.currentUser == null) return;
         handleShow();
       },
     });
@@ -121,11 +120,12 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {location.loaded && !location.error && (
-              <Marker
-                position={[location.coordinates.lat, location.coordinates.lng]}
+              <Circle
+                center={[location.coordinates.lat, location.coordinates.lng]}
+                radius={200}
               >
                 <Popup>Your location.</Popup>
-              </Marker>
+              </Circle>
             )}
             <LocationMarker />
           </MapContainer>
