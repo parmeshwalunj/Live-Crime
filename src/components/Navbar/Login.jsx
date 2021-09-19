@@ -4,7 +4,7 @@ import { signInWithGoogle, signOut } from "../../firebase/authApi";
 import { getAuth } from "firebase/auth";
 
 function Login({ setLoggedIn, loggedIn }) {
-  const [toggle, setToggle] = useState(loggedIn ? "Login" : "Logout");
+  const [toggle, setToggle] = useState(loggedIn ? "Logout" : "Login");
 
   const login = () => {
     setToggle("logout");
@@ -18,16 +18,17 @@ function Login({ setLoggedIn, loggedIn }) {
     getAuth().onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
       }
     });
   }, [setLoggedIn]);
 
   const checkLogin = () => {
-    let auth = getAuth();
-    if (auth.currentUser == null) {
-      signInWithGoogle(login);
+    if (loggedIn) {
+      signOut(logout, console.log);
     } else {
-      signOut(logout);
+      signInWithGoogle(login, console.log);
     }
   };
 

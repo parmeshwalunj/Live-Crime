@@ -79,7 +79,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
       </>
     );
   };
-  console.log(location.coordinates);
+
   return (
     <>
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
