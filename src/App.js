@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "./components/Navbar/Navbar";
 import {
   MapContainer,
@@ -17,7 +17,9 @@ import { getAuth } from 'firebase/auth';
 import CheckCrimeModal from "./components/Modal/CheckCrimeModal";
 import AddCrimeModal from "./components/Modal/AddCrimeModal";
 
-import { crimeData } from './util/tempCrimeData'
+import { getNearbyCrimesListener } from './firebase/crimeApi'
+import { crimeData } from './util/tempCrimeData';
+
 
 const App = ({ zoom = 13, scrollWheelZoom = true }) => {
 
@@ -49,28 +51,24 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
   const location = useGeoLocation();
   const ZOOM_LEVEL = 9;
 
-  if (location.loaded && location.error) {
-    // TODO: use GeoIp API to get approximate location
-  }
-
   const [cords, setCords] = useState([]);
 
   const LocationMarker = () => {
+
     const map = useMapEvents({
       click(e) {
         let curCords = [e.latlng.lat, e.latlng.lng];
         setNewCords(curCords)
         let auth = getAuth();
         if (auth.currentUser == null) return;
-
         handleShow();
-
-        setCords((prevValue) => {
-          return [...prevValue, curCords];
-        });
+        const handleErr = () => {
+          // console.log(err)
+        }
+        getNearbyCrimesListener(location.coordinates, setCords, handleErr);
       },
     });
-
+    
     return (
       <>
         {cords.map((cord, idx) => {
@@ -109,7 +107,6 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
             {location.loaded && !location.error && (
               <Marker
                 position={[location.coordinates.lat, location.coordinates.lng]}
-
               >
                 <Popup>
                   your location.

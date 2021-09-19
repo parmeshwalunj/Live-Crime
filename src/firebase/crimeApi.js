@@ -46,17 +46,21 @@ const getNearbyCrimesListener = (location, onSuccess, onError) => {
     (snap) => {
       if (snap.val()) {
         const crimes = snap.val();
+        const keys = Object.keys(crimes);
+
         const crimeData = [];
-        for (const crime of crimes) {
+
+        for (let i = 0; i < keys.length; i++) {
           const distance = distanceBetween(
             location.lat,
             location.lng,
-            crime.lat,
-            crime.lng
+            crimes[keys[i]].lat,
+            crimes[keys[i]].lng
           );
           // 100km.
+
           if (distance < 100) {
-            crimeData.push(crime);
+            crimeData.push([crimes[keys[i]].lat, crimes[keys[i]].lng]);
           }
         }
         onSuccess(crimeData);
@@ -64,7 +68,7 @@ const getNearbyCrimesListener = (location, onSuccess, onError) => {
         onSuccess([]);
       }
     },
-    onError
+    onError()
   );
 };
 

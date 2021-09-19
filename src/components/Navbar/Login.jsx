@@ -20,7 +20,6 @@ function Login() {
     }
 
     useEffect(() => {
-        console.log("hello")
         signInWithGoogle(login,failureCallBack)
     }, []);
 
