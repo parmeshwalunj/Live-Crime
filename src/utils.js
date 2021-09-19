@@ -21,3 +21,5 @@ function distanceBetween(lat1, lon1, lat2, lon2) {
     return dist;
   }
 }
+
+export { distanceBetween };
