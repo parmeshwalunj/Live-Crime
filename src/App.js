@@ -74,11 +74,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
     return (
       <>
         {cords.map((cord, idx) => {
-          return (
-            <Marker key={idx} position={cord}>
-              <Popup>crime happened.</Popup>
-            </Marker>
-          );
+          return <Marker key={idx} position={cord} />;
         })}
       </>
     );

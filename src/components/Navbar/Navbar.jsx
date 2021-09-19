@@ -16,7 +16,7 @@ const NavStyle = {
   justifyContent: "space-between",
 };
 
-function NavBar({ setLoggedIn }) {
+function NavBar({ setLoggedIn, loggedIn }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar style={{ backgroundColor: "black" }} position="static">
@@ -25,7 +25,7 @@ function NavBar({ setLoggedIn }) {
 
           <SearchBox />
 
-          <Login setLoggedIn={setLoggedIn} />
+          <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         </Toolbar>
       </AppBar>
     </Box>

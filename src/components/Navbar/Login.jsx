@@ -3,8 +3,8 @@ import Button from "@mui/material/Button";
 import { signInWithGoogle, signOut } from "../../firebase/authApi";
 import { getAuth } from "firebase/auth";
 
-function Login({ setLoggedIn }) {
-  const [toggle, setToggle] = useState("Login");
+function Login({ setLoggedIn, loggedIn }) {
+  const [toggle, setToggle] = useState(loggedIn ? "Login" : "Logout");
 
   const login = () => {
     setToggle("logout");
@@ -14,19 +14,13 @@ function Login({ setLoggedIn }) {
     setToggle("login");
   };
 
-  const failureCallBack = (err) => {
-    console.log(err);
-  };
-
   useEffect(() => {
     getAuth().onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(true);
       }
     });
-
-    // signInWithGoogle(login, failureCallBack);
-  }, []);
+  }, [setLoggedIn]);
 
   const checkLogin = () => {
     let auth = getAuth();
