@@ -74,7 +74,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
     return (
       <>
         {cords.map((cord, idx) => {
-          return <Marker key={idx} position={cord} />;
+          return <Circle key={idx} center={cord} radius={200} color="red" />;
         })}
       </>
     );
