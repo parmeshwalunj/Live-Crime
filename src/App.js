@@ -21,7 +21,6 @@ import AddCrimeModal from "./components/Modal/AddCrimeModal";
 import { getNearbyCrimesListener } from "./firebase/crimeApi";
 import { crimeData } from "./util/tempCrimeData";
 import { CircularProgress } from "@mui/material";
-// import { Alert } from 'react-alert';
 
 const App = ({ zoom = 13, scrollWheelZoom = true }) => {
   const [newCords, setNewCords] = useState([0, 0]);
