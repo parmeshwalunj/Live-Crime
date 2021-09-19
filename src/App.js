@@ -82,24 +82,34 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
               color="red"
               eventHandlers={{
                 click: () => {
-                  console.log(crime, idx);
+                  // console.log(crime, idx);
+                  console.log(crimes[idx]);
                   setDisplayCrimeModal(idx);
                 },
               }}
             >
-              <Popup></Popup>
+              <Popup />
             </Circle>
           );
         })}
       </>
     );
   };
-  console.log(crimes);
+  // console.log(crimes);
   return (
     <>
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       {loggedIn === null ? (
-        <CircularProgress />
+        <div
+          style={{
+            minHeight: "90vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
       ) : location.loaded ? (
         !location.error ? (
           <MapContainer
@@ -160,7 +170,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
       />
       {crimes.length && displayCrimeModal !== false && (
         <DisplayCrime
-          show={!!displayCrimeModal}
+          show={displayCrimeModal !== false}
           crimeData={crimes[displayCrimeModal]}
           handleClose={() => setDisplayCrimeModal(false)}
         />
