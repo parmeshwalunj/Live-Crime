@@ -19,24 +19,25 @@ import CheckCrimeModal from "./components/Modal/CheckCrimeModal";
 import AddCrimeModal from "./components/Modal/AddCrimeModal";
 
 import { getNearbyCrimesListener } from "./firebase/crimeApi";
-import { crimeData } from "./util/tempCrimeData";
 import { CircularProgress } from "@mui/material";
+import DisplayCrime from "./components/Modal/DisplayCrimeModal";
 
 const App = ({ zoom = 13, scrollWheelZoom = true }) => {
   const [newCords, setNewCords] = useState([0, 0]);
   const [loggedIn, setLoggedIn] = useState(null);
+  const [displayCrimeModal, setDisplayCrimeModal] = useState(false);
 
   // modal states and functions
 
   const [show, setShow] = useState(false);
   const [AddCrime, setShowAddCrime] = useState(false);
-  const [cords, setCords] = useState([]);
+  const [crimes, setCrimes] = useState([]);
   const location = useGeoLocation();
 
   useEffect(() => {
     const unsub = getNearbyCrimesListener(
       location.coordinates,
-      setCords,
+      setCrimes,
       console.log
     );
     return () => {
@@ -46,7 +47,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    if (crimeData.length === 0) {
+    if (crimes.length === 0) {
       setShow(false);
       showAddCrime(true);
     } else setShow(true);
@@ -73,13 +74,28 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
 
     return (
       <>
-        {cords.map((cord, idx) => {
-          return <Circle key={idx} center={cord} radius={200} color="red" />;
+        {crimes.map((crime, idx) => {
+          return (
+            <Circle
+              key={idx}
+              center={[crime.lat, crime.lng]}
+              radius={200}
+              color="red"
+              eventHandlers={{
+                click: () => {
+                  console.log(crime, idx);
+                  setDisplayCrimeModal(idx);
+                },
+              }}
+            >
+              <Popup></Popup>
+            </Circle>
+          );
         })}
       </>
     );
   };
-
+  console.log(crimes);
   return (
     <>
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
@@ -134,7 +150,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
       <CheckCrimeModal
         show={show}
         handleClose={handleClose}
-        crimeData={crimeData}
+        crimeData={crimes}
         addCrime={showAddCrime}
       />
       <AddCrimeModal
@@ -143,6 +159,13 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
         lat={newCords[0]}
         lng={newCords[1]}
       />
+      {crimes.length && displayCrimeModal !== false && (
+        <DisplayCrime
+          show={!!displayCrimeModal}
+          crimeData={crimes[displayCrimeModal]}
+          handleClose={() => setDisplayCrimeModal(false)}
+        />
+      )}
     </>
   );
 };

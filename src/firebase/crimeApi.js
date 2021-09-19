@@ -77,7 +77,7 @@ const getNearbyCrimesListener = (location, onSuccess, onError) => {
           // 100km.
 
           if (distance < 100) {
-            crimeData.push([crimes[keys[i]].lat, crimes[keys[i]].lng]);
+            crimeData.push(crimes[keys[i]]);
           }
         }
         onSuccess(crimeData);
