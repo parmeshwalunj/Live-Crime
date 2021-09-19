@@ -77,7 +77,7 @@ const getNearbyCrimesListener = (location, onSuccess, onError) => {
           // 100km.
 
           if (distance < 100) {
-            crimeData.push(crimes[keys[i]]);
+            crimeData.push({ ...crimes[keys[i]], id: keys[i] });
           }
         }
         onSuccess(crimeData);
@@ -123,7 +123,7 @@ const getMessagesListener = (crimeId, onSuccess, onError) => {
     query(ref(getDatabase(firebaseApp), `/messages/${crimeId}`)),
     (snap) => {
       if (snap.val()) {
-        onSuccess(snap.val());
+        onSuccess(Object.values(snap.val()));
       } else {
         onSuccess([]);
       }

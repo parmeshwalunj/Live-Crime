@@ -34,13 +34,13 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
   const location = useGeoLocation();
 
   useEffect(() => {
-    const unsub = getNearbyCrimesListener(
+    const unsubCrimes = getNearbyCrimesListener(
       location.coordinates,
       setCrimes,
       console.log
     );
     return () => {
-      unsub();
+      unsubCrimes();
     };
   }, [location.coordinates]);
 
