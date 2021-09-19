@@ -66,7 +66,8 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
         let curCords = [e.latlng.lat, e.latlng.lng];
         setNewCords(curCords);
         let auth = getAuth();
-        if (auth.currentUser == null) return;
+        if (!loggedIn) 
+        return alert("Please Login First!");
         handleShow();
       },
     });
