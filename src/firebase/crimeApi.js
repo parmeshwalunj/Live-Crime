@@ -3,7 +3,7 @@ import { firebaseApp } from "./init";
 import { distanceBetween } from "../utils";
 
 /**
- * @typedef {"robbing" | "murder" | "traffic" | "kidnapping" | "fire"} CrimeType
+ * @typedef {"murder"| "theft"| "Assault"| "Child Abuse"| "Violence"| "Kidnapping"| "Riots"| "burglary"| "cybercrime"| "bombing"| "forgery"| "child trafficing"| "genocide"| "hit and run"| "looting"| "rape"| "smuggling"| "vandalism"| "other"} CrimeType
  */
 
 /**
@@ -21,12 +21,19 @@ import { distanceBetween } from "../utils";
  */
 
 /**
+ * Location type.
+ * @typedef {Object} Location
+ * @property {number} lat - Latitude of the location.
+ * @property {number} lng - Longitude of the location.
+ */
+
+/**
  * Function to add a crime.
  * @param {{uid: string}} user - The user's id
  * @param {Crime} data - The {@link Crime} data to be added to the database
  * @param {function} onSuccess - The callback function to be called on success
  * @param {function} onError - The callback function to be called on error
- * @returns {void}
+ * @returns {void} void
  *
  */
 const addCrime = (user, data, onSuccess, onError) => {
@@ -39,9 +46,19 @@ const addCrime = (user, data, onSuccess, onError) => {
     .catch(onError);
 };
 
+/**
+ * Function to get all crimes.
+ * @param {Location} location - The {@link Location} object.
+ * @param {function} onSuccess - The callback function to be called on success
+ * @param {function} onError - The callback function to be called on error
+ * @returns {function} unsubscribe - The unsubscribe function to be called to
+ * unsubscribe from the listener.
+ * @example
+ * const unsubscribe = getCrimes({lat: 5, lng: 3}, onSuccess, onError);
+ */
 const getNearbyCrimesListener = (location, onSuccess, onError) => {
   const db = getDatabase(firebaseApp);
-  onValue(
+  return onValue(
     query(ref(db, "crimes/")),
     (snap) => {
       if (snap.val()) {
@@ -72,4 +89,47 @@ const getNearbyCrimesListener = (location, onSuccess, onError) => {
   );
 };
 
-export { addCrime, getNearbyCrimesListener };
+/**
+ *
+ * @param {import('firebase/auth').User} user - The user object.
+ * @param {string} crimeId - The crime's id.
+ * @param {string} message - The message to be added to the database.
+ * @param {function} onSuccess - The callback function to be called on success.
+ * @param {function} onError - The callback function to be called on error.
+ */
+const addMessage = (user, crimeId, message, onSuccess, onError) => {
+  const db = getDatabase(firebaseApp);
+  push(ref(db, `/messages/${crimeId}`), {
+    message: message,
+    creator_avatar: user.photoURL,
+    creator_name: user.displayName,
+    creator_id: user.uid,
+    timestamp: Date.now(),
+  })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+/**
+ *
+ * @param {string} crimeId - The crime's id.
+ * @param {function} onSuccess - The callback function to be called on success.
+ * @param {onError} onError - The callback function to be called on error.
+ * @returns {function} unsubscribe - The unsubscribe function to be called to
+ * unsubscribe from the listener.
+ */
+const getMessagesListener = (crimeId, onSuccess, onError) => {
+  return onValue(
+    query(ref(getDatabase(firebaseApp), `/messages/${crimeId}`)),
+    (snap) => {
+      if (snap.val()) {
+        onSuccess(snap.val());
+      } else {
+        onSuccess([]);
+      }
+    },
+    onError
+  );
+};
+
+export { addCrime, getNearbyCrimesListener, addMessage, getMessagesListener };
