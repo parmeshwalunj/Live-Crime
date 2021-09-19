@@ -1,39 +1,35 @@
-import * as React from 'react';
+import * as React from "react";
 
 // material ui
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
 
 // components
-import Report from './Report';
-import SearchBox from './SearchBox';
-import Login from './Login';
-
+import Report from "./Report";
+import SearchBox from "./SearchBox";
+import Login from "./Login";
 
 // css
 const NavStyle = {
-    display : "flex",
-    justifyContent : "space-between"
-}
+  display: "flex",
+  justifyContent: "space-between",
+};
 
-function NavBar() {
+function NavBar({ setLoggedIn }) {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar style={{ backgroundColor: "black" }} position="static">
+        <Toolbar style={NavStyle}>
+          <Report />
 
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar style={{backgroundColor : "black"}} position="static">
-                <Toolbar style={NavStyle}>
+          <SearchBox />
 
-                    <Report />
-
-                    <SearchBox />
-
-                    <Login />
-
-                </Toolbar>
-            </AppBar>
-        </Box>
-    );
+          <Login setLoggedIn={setLoggedIn} />
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
 }
 
 export default NavBar;

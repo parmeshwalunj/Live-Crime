@@ -6,86 +6,90 @@ import {
   Marker,
   TileLayer,
   useMapEvents,
+  Circle,
 } from "react-leaflet";
 import "./css/App.css";
 import useGeoLocation from "./hooks/useGeoLocation";
 import Typography from "@mui/material/Typography";
 // firebase
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 // modal components
 import CheckCrimeModal from "./components/Modal/CheckCrimeModal";
 import AddCrimeModal from "./components/Modal/AddCrimeModal";
 
-import { getNearbyCrimesListener } from './firebase/crimeApi'
-import { crimeData } from './util/tempCrimeData';
-
+import { getNearbyCrimesListener } from "./firebase/crimeApi";
+import { crimeData } from "./util/tempCrimeData";
+import { CircularProgress } from "@mui/material";
 
 const App = ({ zoom = 13, scrollWheelZoom = true }) => {
-
-  const [newCords, setNewCords] = useState([0, 0])
+  const [newCords, setNewCords] = useState([0, 0]);
+  const [loggedIn, setLoggedIn] = useState(null);
 
   // modal states and functions
 
   const [show, setShow] = useState(false);
   const [AddCrime, setShowAddCrime] = useState(false);
+  const [cords, setCords] = useState([]);
+  const location = useGeoLocation();
+
+  useEffect(() => {
+    const unsub = getNearbyCrimesListener(
+      location.coordinates,
+      setCords,
+      console.log
+    );
+    return () => {
+      unsub();
+    };
+  }, [location.coordinates]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    if (crimeData.length == 0) {
+    if (crimeData.length === 0) {
       setShow(false);
       showAddCrime(true);
-    }
-    else setShow(true);
-  }
+    } else setShow(true);
+  };
 
   const showAddCrime = () => {
     if (show) setShow(false);
-    setShowAddCrime(true)
+    setShowAddCrime(true);
   };
   const hideAddCrime = () => {
-    setShowAddCrime(false)
+    setShowAddCrime(false);
   };
 
-  // geolocation 
-  const location = useGeoLocation();
-  const ZOOM_LEVEL = 9;
-
-  const [cords, setCords] = useState([]);
-
   const LocationMarker = () => {
-
-    const map = useMapEvents({
+    useMapEvents({
       click(e) {
         let curCords = [e.latlng.lat, e.latlng.lng];
-        setNewCords(curCords)
+        setNewCords(curCords);
         let auth = getAuth();
         if (auth.currentUser == null) return;
         handleShow();
-        const handleErr = () => {
-          // console.log(err)
-        }
-        getNearbyCrimesListener(location.coordinates, setCords, handleErr);
       },
     });
-    
+
     return (
       <>
         {cords.map((cord, idx) => {
-          return <Marker key={idx} position={cord} >
-            <Popup>
-              crime happened.
-            </Popup>
-          </Marker>;
+          return (
+            <Marker key={idx} position={cord}>
+              <Popup>crime happened.</Popup>
+            </Marker>
+          );
         })}
       </>
     );
   };
-
+  console.log(location.coordinates);
   return (
     <>
-      <NavBar />
-      {location.loaded ? (
+      <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      {loggedIn === null ? (
+        <CircularProgress />
+      ) : location.loaded ? (
         !location.error ? (
           <MapContainer
             style={{
@@ -94,7 +98,7 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
               top: "10vh",
               right: 0,
               left: 0,
-              bottom: 0
+              bottom: 0,
             }}
             center={[location.coordinates.lat, location.coordinates.lng]}
             zoom={zoom}
@@ -105,17 +109,15 @@ const App = ({ zoom = 13, scrollWheelZoom = true }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {location.loaded && !location.error && (
-              <Marker
-                position={[location.coordinates.lat, location.coordinates.lng]}
+              <Circle
+                center={[location.coordinates.lat, location.coordinates.lng]}
+                radius={200}
               >
-                <Popup>
-                  your location.
-                </Popup>
-              </Marker>
+                <Popup>Your location.</Popup>
+              </Circle>
             )}
             <LocationMarker />
           </MapContainer>
-
         ) : (
           <div>Location Access not given, use GeoIP location here.</div>
         )
