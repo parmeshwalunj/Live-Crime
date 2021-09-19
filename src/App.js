@@ -3,7 +3,6 @@ import NavBar from "./components/Navbar/Navbar";
 import {
   MapContainer,
   Popup,
-  Marker,
   TileLayer,
   useMapEvents,
   Circle,

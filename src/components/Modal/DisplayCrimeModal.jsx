@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
 import NearbyCrime from "./NearbyCrime";
@@ -10,8 +10,8 @@ const style = {
 };
 
 function DisplayCrime({ show, handleClose, crimeData }) {
-  const [comment, setComment] = useState("");
-  const [chats, setChats] = useState([]);
+  //   const [comment, setComment] = useState("");
+  //   const [chats, setChats] = useState([]);
   console.log(crimeData);
   const addComment = () => {
     console.log("comment");
