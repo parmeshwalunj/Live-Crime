@@ -27,15 +27,21 @@ function DisplayCrime({ show, handleClose, crimeData, messages }) {
   }, [crimeData.id]);
 
   const addComment = () => {
-    addMessage(
-      getAuth().currentUser,
-      crimeData.id,
-      comment,
-      () => {
-        setComment("");
-      },
-      console.log
-    );
+    if (comment.trim()) {
+      if (getAuth().currentUser === null) {
+        alert("Please check if you are logged in!");
+        return;
+      }
+      addMessage(
+        getAuth().currentUser,
+        crimeData.id,
+        comment,
+        () => {
+          setComment("");
+        },
+        console.log
+      );
+    }
   };
 
   return (
